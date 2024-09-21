@@ -6,6 +6,6 @@ from network.views import NetworkNodeViewSet
 router = DefaultRouter()
 router.register(r'network-nodes', NetworkNodeViewSet)
 
-urrpatterns = [
+urlpatterns = [
     path('', include(router.urls)),
 ]
