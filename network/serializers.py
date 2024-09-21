@@ -10,15 +10,22 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class NetworkNodeSerializer(serializers.ModelSerializer):
-    products = ProductSerializer(many=True, read_only=True)
+    products = serializers.PrimaryKeyRelatedField(
+        many=True, queryset=Product.objects.all(), required=False
+    )
     supplier = serializers.PrimaryKeyRelatedField(
-        queryset=NetworkNode.objects.all(), allow_null=True
+        queryset=NetworkNode.objects.all(), allow_null=True, required=False
     )
     supplier_name = serializers.CharField(
         source='supplier.name', read_only=True
-    )  # Optional: Display supplier's name in responses
+    )
+
+    def validate_supplier(self, value):
+        if self.instance and self.instance.level == 0 and value is not None:
+            raise serializers.ValidationError("Supplier must be null for level 0 nodes.")
+        return value
 
     class Meta:
         model = NetworkNode
         fields = '__all__'
-        read_only_fields = ('debt', 'created_at')  # prevents debt from being updated via the API
+        read_only_fields = ('created_at',)
