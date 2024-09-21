@@ -10,10 +10,10 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class NetworkNodeSerializer(serializers.ModelSerializer):
-    products = ProductSerializer(many=True ,read_only=True)
-    supplier = serializers.StringRelatedField() # supplier = serializers.StringRelatedField() shows the supplier’s name
+    products = ProductSerializer(many=True, read_only=True)
+    supplier = serializers.StringRelatedField()  # supplier = serializers.StringRelatedField() shows the supplier’s name
 
     class Meta:
         model = NetworkNode
         fields = '__all__'
-        read_only_fields = ('debt', 'created_at') # prevents debt from being updated via the API
+        read_only_fields = ('debt', 'created_at')  # prevents debt from being updated via the API
