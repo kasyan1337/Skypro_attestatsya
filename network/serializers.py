@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import NetworkNode, Product
+from .models import Product, NetworkNode
 
 
 class ProductSerializer(serializers.ModelSerializer):
@@ -11,7 +11,12 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class NetworkNodeSerializer(serializers.ModelSerializer):
     products = ProductSerializer(many=True, read_only=True)
-    supplier = serializers.StringRelatedField()  # supplier = serializers.StringRelatedField() shows the supplier’s name
+    supplier = serializers.PrimaryKeyRelatedField(
+        queryset=NetworkNode.objects.all(), allow_null=True
+    )
+    supplier_name = serializers.CharField(
+        source='supplier.name', read_only=True
+    )  # Optional: Display supplier's name in responses
 
     class Meta:
         model = NetworkNode
